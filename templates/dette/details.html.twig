@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Détails de la Dette</h2>
+    <!-- Section d'informations principales -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm d-flex align-items-center flex-row">
+                <img src="https://via.placeholder.com/100" alt="Photo" class="rounded-circle me-4">
+                <div>
+                    <p><strong>Surname :</strong> {{ dette.client.surname }}</p>
+                    <p><strong>Téléphone :</strong> {{ dette.client.telephone }}</p>
+                    <p><strong>Email :</strong> {{ dette.client.utilisateur ? dette.client.utilisateur.email : 'N/A' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <p><strong>Montant Total :</strong> {{ dette.montant|number_format(0, '.', ' ') }} FCFA</p>
+                <p><strong>Montant Versé :</strong> {{ dette.montantVerser|number_format(0, '.', ' ') }} FCFA</p>
+                <p><strong>Montant Restant :</strong> {{ dette.montantRestant|number_format(0, '.', ' ') }} FCFA</p>
+            </div>
+        </div>
+    </div>
+    <!-- Articles and Payments Tables -->
+    <div class="row mb-4">
+        <div class="col-md-12 d-flex justify-content-end mb-3">
+            <a href="{{ path('paiement_new', { id: dette.id }) }}" class="btn btn-primary me-2">Enregistrer un Paiement</a>
+            <a href="{{ path('client_details', { id: dette.client.id }) }}" class="btn btn-secondary">Retour</a>
+        </div>
+        <div class="col-md-6">
+            <h4>Articles Associés</h4>
+            <table class="table table-bordered text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Quantité</th>
+                        <th>Prix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for article in articles %}
+                    <tr>
+                        <td>{{ article.nomArticle }}</td>
+                        <td>{{ article.qteStock }}</td>
+                        <td>{{ article.prix|number_format(0, '.', ' ') }} FCFA</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">Aucun article associé.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h4>Liste des Paiements</h4>
+            <table class="table table-bordered text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Date</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paiement in paiements %}
+                    <tr>
+                        <td>{{ paiement.date|date('d-m-Y') }}</td>
+                        <td>{{ paiement.montant|number_format(0, '.', ' ') }} FCFA</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center">Aucun paiement enregistré.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center mt-3">
+                {{ knp_pagination_render(paiements) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-4 shadow" style="width: 30rem;">
+        <h2 class="text-center mb-4">Créer une Nouvelle Dette</h2>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_row(form.date, { 'label': 'Date de la dette' }) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.montant, { 'label': 'Montant total' }) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.montantVerser, { 'label': 'Montant versé' }) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.client, { 'label': 'Client' }) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(form.articles, { 'label': 'Articles associés' }) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

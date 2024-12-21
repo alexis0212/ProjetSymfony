@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Ecran Utilisateurs</h2>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ path('user_filter', { role: 'all' }) }}" 
+               class="btn {{ selectedRole == 'all' ? 'btn-danger' : 'btn-outline-secondary' }} me-2">ALL</a>
+            <a href="{{ path('user_filter', { role: 'admin' }) }}" 
+               class="btn {{ selectedRole == 'admin' ? 'btn-primary' : 'btn-outline-secondary' }} me-2">Admin</a>
+            <a href="{{ path('user_filter', { role: 'boutiquier' }) }}" 
+               class="btn {{ selectedRole == 'boutiquier' ? 'btn-primary' : 'btn-outline-secondary' }} me-2">Boutiquier</a>
+            <a href="{{ path('user_filter', { role: 'client' }) }}" 
+               class="btn {{ selectedRole == 'client' ? 'btn-primary' : 'btn-outline-secondary' }}">Client</a>
+        </div>
+        <a href="{{ path('user_new') }}" class="btn btn-primary">NOUVEAU</a>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead class="table-primary">
+            <tr>
+                <th>RÔLE</th>
+                <th>LOGIN</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in pagination %}
+                <tr>
+                    <td>{{ user.roles|join(', ') }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <a href="{{ path('user_activate', { id: user.id }) }}" class="btn btn-secondary btn-sm">
+                            {{ user.isActive ? 'Désactiver' : 'Activer' }}
+                        </a>
+                       
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun utilisateur trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end mt-3">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}

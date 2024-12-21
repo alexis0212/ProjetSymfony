@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Détails du Client</h2>
+    <div class="row">
+        <!-- Section d'informations principales -->
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <img src="https://via.placeholder.com/100" alt="Photo du client" class="rounded-circle">
+                    </div>
+                    <div>
+                        <p><strong>Surname :</strong> {{ client.surname }}</p>
+                        <p><strong>Téléphone :</strong> {{ client.telephone }}</p>
+                        <p><strong>Email :</strong> {{ client.utilisateur ? client.utilisateur.email : 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Section des montants -->
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <p><strong>Montant Total :</strong> {{ client.getMontantTotalDettes() | number_format(0, '.', ' ') }} FCFA</p>
+                <p><strong>Montant Versé :</strong> {{ client.getMontantTotalVerse() | number_format(0, '.', ' ') }} FCFA</p>
+                <p><strong>Montant Restant :</strong> {{ client.getMontantRestant() | number_format(0, '.', ' ') }} FCFA</p>
+            </div>
+        </div>
+    </div>
+    <!-- Liste des dettes -->
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Liste des Dettes</h4>
+              <!-- Formulaire de filtre par date -->
+        <form method="get" class="d-flex align-items-center">
+            <input type="date" name="specific_date" class="form-control form-control-sm me-2" 
+                   style="width: 200px;" value="{{ specificDate ? specificDate|date('Y-m-d') : '' }}">
+            <button type="submit" class="btn btn-info btn-sm">Filtrer par date</button>
+        </form>
+            <div>
+                <a href="{{ path('client_details', { id: client.id }) }}" class="btn btn-secondary">Tout</a>
+                <a href="?filter=soldes" class="btn btn-primary">Soldées</a>
+                <a href="?filter=non-soldes" class="btn btn-danger">Non Soldées</a>
+            </div>
+        </div>
+        
+        <table class="table table-bordered text-center">
+            <thead class="table-primary">
+                <tr>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>MontantVersé</th>
+                    <th>MontantRestant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dette in filteredDettes %}
+                <tr>
+                    <td>{{ dette.date | date('d-m-Y') }}</td>
+                    <td>{{ dette.montant | number_format(0, '.', ' ') }} FCFA</td>
+                    <td>{{ dette.montantVerser | number_format(0, '.', ' ') }} FCFA</td>
+                    <td>{{ dette.montantRestant | number_format(0, '.', ' ') }} FCFA</td>
+                    <td>
+                        <a href="{{ path('dette_details', { id: dette.id }) }}" class="btn btn-info btn-sm">Détails</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucune dette enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('client_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</div>
+{% endblock %}

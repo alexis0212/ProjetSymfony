@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Ajouter un Nouveau Client</h2>
+    <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="max-width: 500px; margin: 0 auto;"> <!-- Réduction de largeur -->
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_row(form.surname, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.telephone, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.adress, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+                </div>
+                <div class="form-check form-switch d-flex align-items-center justify-content-start mb-3">
+                    {{ form_widget(form.createAccount, {'attr': {'class': 'form-check-input'}}) }}
+                    <label class="form-check-label ms-2">{{ form_label(form.createAccount) }}</label>
+                </div>
+                <div id="account-fields" style="display: none;">
+                    <div class="mb-3">
+                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_row(form.password, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center"> <!-- Boutons centrés -->
+                    <a href="{{ path('client_index') }}" class="btn btn-danger me-2"><i class="fas fa-times"></i> Annuler</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const createAccountSwitch = document.querySelector('#client_createAccount');
+        const accountFields = document.querySelector('#account-fields');
+
+        createAccountSwitch.addEventListener('change', function () {
+            if (this.checked) {
+                accountFields.style.display = 'block';
+            } else {
+                accountFields.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

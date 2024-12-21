@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Liste des Clients</h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <form method="get" class="d-flex align-items-center">
+            <input type="text" name="search" class="form-control me-2" placeholder="Filtrer par Téléphone" value="{{ search }}" style="width: 200px;"> <!-- Réduction de la largeur -->
+            <select name="hasAccount" class="form-select me-2" style="width: 200px;">
+                <option value="">Tous les clients</option>
+                <option value="1" {% if hasAccount == '1' %}selected{% endif %}>Avec compte</option>
+                <option value="0" {% if hasAccount == '0' %}selected{% endif %}>Sans compte</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+        </form>
+        <a href="{{ path('client_new') }}" class="btn btn-primary">Nouveau Client</a>
+    </div>
+
+    <table class="table table-bordered table-striped mt-4">
+        <thead class="table-primary"> <!-- Classe ajoutée pour centrer -->
+            <tr>
+                <th>Surname</th>
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Montant Due</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in pagination %}
+                <tr>
+                    <td>{{ client.surname }}</td>
+                    <td>{{ client.telephone }}</td>
+                    <td>{{ client.adress }}</td>
+                    <td>{{ client.getMontantRestant() }} FCFA</td>
+                    <td>
+                        <a href="{{ path('client_details', {id: client.id}) }}" class="btn btn-info btn-sm">Détails</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Aucun client trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end mt-3"> <!-- Pagination alignée à droite -->
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}

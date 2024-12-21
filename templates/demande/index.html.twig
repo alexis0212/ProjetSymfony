@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Liste des demandes</h2>
+
+    <form method="get" class="d-flex align-items-center mb-4">
+        <label for="etat" class="me-2">Statut :</label>
+        <select name="etat" id="etat" class="form-select" style="width: auto; display: inline;" onchange="this.form.submit()">
+            <option value="en_cours" {% if etat == 'en_cours' %}selected{% endif %}>En cours</option>
+            <option value="accepte" {% if etat == 'accepte' %}selected{% endif %}>Accepté</option>
+            <option value="refuse" {% if etat == 'refuse' %}selected{% endif %}>Refusé</option>
+        </select>
+    </form>
+
+    <table class="table table-bordered text-center">
+        <thead class="table-primary">
+            <tr>
+                <th>DATE</th>
+                <th>MONTANT</th>
+                <th>SURNAME</th>
+                <th>TELEPHONE</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for demande in demandes %}
+                <tr>
+                    <td>{{ demande.date|date('d-m-Y') }}</td>
+                    <td>{{ demande.montant|number_format(0, '.', ' ') }} FCFA</td>
+                    <td>{{ demande.client.surname }}</td>
+                    <td>{{ demande.client.telephone }}</td>
+                    <td>
+                        <a href="{{ path('demandes_details', { id: demande.id }) }}" class="btn btn-success btn-sm">Détails</a>
+                        {% if demande.etat == 'en_cours' %}
+                            <a href="{{ path('demandes_accepter', { id: demande.id }) }}" class="btn btn-primary btn-sm">Accepter</a>
+                            <a href="{{ path('demandes_refuser', { id: demande.id }) }}" class="btn btn-danger btn-sm">Refuser</a>
+                        {% elseif demande.etat == 'refuse' %}
+                            <a href="{{ path('demandes_relancer', { id: demande.id }) }}" class="btn btn-warning btn-sm">Relancer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucune demande trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        {{ knp_pagination_render(demandes) }}
+    </div>
+</div>
+{% endblock %}

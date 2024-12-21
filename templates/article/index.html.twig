@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Approvisionnement</h2>
+        <a href="{{ path('article_new') }}" class="btn btn-primary">Nouvel Article</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Lister les produits</h5>
+                <div class="mb-3">
+                    <a href="{{ path('article_index', {filter: 'rup'}) }}" class="btn btn-danger">RUP</a>
+                    <a href="{{ path('article_index', {filter: 'dis'}) }}" class="btn btn-secondary">DIS</a>
+                    <a href="{{ path('article_index', {filter: 'all'}) }}" class="btn btn-primary">ALL</a>
+                </div>
+                <table class="table table-bordered text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Article</th>
+                            <th>Prix</th>
+                            <th>Qte en stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in articles %}
+                            <tr>
+                                <td>{{ article.nomArticle }}</td>
+                                <td>{{ article.prix }}</td>
+                                <td>{{ article.qteStock }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3">Aucun article trouvé.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ knp_pagination_render(articles) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Liste de produits sélectionnés</h5>
+                <form method="post" action="{{ path('article_save') }}">
+                    <table class="table table-bordered text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ARTICLE</th>
+                                <th>PRIX</th>
+                                <th>QUANTITÉ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select name="articleId" class="form-select">
+                                        {% for article in articles %}
+                                            <option value="{{ article.id }}">{{ article.nomArticle }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    {{ articles|first.prix }}
+                                </td>
+                                <td>
+                                    <input type="number" name="newQuantity" value="1" class="form-control text-center" style="width: 80px;" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary">SAVE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
